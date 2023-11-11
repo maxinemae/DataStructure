@@ -1,7 +1,8 @@
+
 import java.util.Scanner;
 import java.util.Stack;
 
-public class ShoppingCart {
+public class Main {
     private Stack<CartItem> cartStack;
     private double totalAmount;
 
@@ -14,15 +15,24 @@ public class ShoppingCart {
             this.price = price;
         }
     }
-    public ShoppingCart() {
+    
+    public Main() {
         cartStack = new Stack<>();
         totalAmount = 0.0;
     }
+
+    public void addToCart(String itemName, double price) {
+        CartItem item = new CartItem(itemName, price);
+        cartStack.push(item);
+        System.out.println(itemName + " added to the cart.");
+        totalAmount += price;
+    }
+    
     public void createItem() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("  Enter item name: ");
         String itemName = scanner.nextLine();
-        System.out.print("  Enter item price: ₱ ");
+        System.out.print("  Enter item price: ");
         double price = scanner.nextDouble();
         scanner.nextLine();
         System.out.print("  Add this item to the cart? (Yes/No): ");
@@ -30,12 +40,6 @@ public class ShoppingCart {
         if (choice.equalsIgnoreCase("yes")) {
             addToCart(itemName, price);
         }
-    }
-    public void addToCart(String itemName, double price) {
-        CartItem item = new CartItem(itemName, price);
-        cartStack.push(item);
-        System.out.println( itemName + " added to the cart.");
-        totalAmount += price;
     }
     
     public void removeItem(String itemName) {
@@ -45,11 +49,11 @@ public class ShoppingCart {
 
     while (!cartStack.isEmpty()) {
         CartItem item = cartStack.pop();
-        if (!item.itemName.toLowerCase().equals(itemToRemove)) {
-            tempStack.push(item);
-        } else {
+        if (item.itemName.toLowerCase().equals(itemToRemove)) {
             found = true;
             totalAmount -= item.price;
+        } else {
+            tempStack.push(item);
         }
     }
 
@@ -64,8 +68,9 @@ public class ShoppingCart {
     }
 }
 
+
     public double displayCart() {
-        System.out.println("  Items in the Shopping Cart: \n");
+        System.out.println("  Shopping Cart Contents: \n");
         double totalAmount = 0.0 ;
         for (CartItem item : cartStack) {
             System.out.println("  " + item.itemName + " - ₱ " + String.format("%.2f \n", item.price));
@@ -104,15 +109,16 @@ public class ShoppingCart {
         } else {
             System.out.println(oldName + " not found in the cart.");
         }
-        System.out.println("\n  Items left in the cart after update:\n");
+        System.out.println("\nItems left in the cart after update:\n");
     for (CartItem item : cartStack) {
         System.out.println("  " + item.itemName + " - ₱ " + String.format("%.2f", item.price));
     }
     }
+
     
     public void searchItem(String itemName) {
     boolean found = false;
-    itemName = itemName.toLowerCase();
+    itemName = itemName.toLowerCase(); 
 
     for (CartItem item : cartStack) {
         if (item.itemName.toLowerCase().equals(itemName)) { 
@@ -120,11 +126,12 @@ public class ShoppingCart {
             found = true;
         }}
     if (!found) {
-        System.out.println("  Item not found in the cart.");
+        System.out.println("Item not found in the cart.");
     }
 }
+    
     public static void main(String[] args) {
-        ShoppingCart cart = new ShoppingCart();
+        Main cart = new Main();
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\n\n  SIMPLE SHOPPING CART SYSTEM");
@@ -150,7 +157,7 @@ public class ShoppingCart {
                     cart.createItem();
                     break;
                 case 2:
-                    System.out.print("  Enter the name of the item to delete: ");
+                    System.out.print("\n  Enter the name of the item to delete: ");
                     String itemToDelete = scanner.next();
                     cart.removeItem(itemToDelete);
                     break;
@@ -159,12 +166,12 @@ public class ShoppingCart {
                     String oldName = scanner.next();
                     System.out.print(" Enter the new name: ");
                     String newName = scanner.next();
-                    System.out.print(" Enter the new price: ₱ ");
+                    System.out.print(" Enter the new price: ");
                     double newPrice = scanner.nextDouble();
                     cart.updateItem(oldName, newName, newPrice);
                     break;
                 case 4:
-                    System.out.println("\n  Viewing items in cart: ");
+                    System.out.println("\n  Viewing items in cart: \n");
                     cart.displayCart();
                     break;
                 case 5:
@@ -173,7 +180,7 @@ public class ShoppingCart {
                     cart.searchItem(itemToSearch);
                     break;
                 case 6:
-                    System.out.println("\n  Items in the Shopping Cart : ");
+                    System.out.println("\n  Shopping Cart Contents: ");
                       for (CartItem item : cart.cartStack) {
                           System.out.println("  " + item.itemName + " - ₱ " + String.format("%.2f", item.price));
         }
@@ -189,12 +196,12 @@ public class ShoppingCart {
                    System.out.print("  Select payment method \n  (Maya / PayPal / GCash / Others): ");
                    String paymentMethod = scanner.next();
                      if (paymentMethod.equalsIgnoreCase("others")) {
-                   System.out.print("  Enter your preferred payment method: ");
+                   System.out.print("  Enter your custom payment method: ");
                         paymentMethod = scanner.next();}
                    System.out.println("  Processing payment using " + paymentMethod);
                    System.out.println("  Payment successful.");
                    cart.cartStack.clear();
-                   cart.totalAmount = 0.0; 
+                   cart.totalAmount = 0.0; // Reset total amount
                    System.out.println("  Cart cleared.");
     }
                     break;
@@ -204,5 +211,8 @@ public class ShoppingCart {
                     System.exit(0);
                     break;
                 default:
-                    System.out.println("  Invalid choice. Choose another on");
+                    System.out.println("  Invalid choice. Please try again.");
             }}}}
+
+
+
